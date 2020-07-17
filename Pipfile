@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 flask = "*"
 gunicorn = "*"
+celery = "*"
+redis = "==3.4.1"
 
 [requires]
 python_version = "3.7"

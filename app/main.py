@@ -1,7 +1,9 @@
 from flask import Flask
+from tasks import hello
 
 app = Flask(__name__)
 
 @app.route("/")
-def home_view():
+def index():
+    hello.delay()
     return "<h1>Successful</h1>"
