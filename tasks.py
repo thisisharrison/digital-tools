@@ -7,4 +7,4 @@ app.config_from_object("celery_settings")
 
 @app.task
 def hello():
-    print 'hello'
+    print ('hello')
