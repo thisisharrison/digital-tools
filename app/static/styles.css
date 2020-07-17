@@ -1,0 +1,22 @@
+.taskstatus::after {
+    content: "";
+}
+.PENDING::after {
+    content: " ⏳";
+}
+.SUCCESS::after {
+    content: " ✅";
+}
+.FAILURE::after {
+    content: " ❌";
+}
+#samplepdp, #samplecdp, #samplestyle {
+    height: 0px;
+    opacity: 0;
+}
+.stat200::after {
+    content: " ✅";
+}
+.stat403::after{
+    content: " ❌";
+}

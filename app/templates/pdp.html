@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Production PDP Search
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Search Masters or SKU PDP Data</h5>
+            <div class="card">
+                <div class="card-body">
+                    <form action="/pdp" method="post">
+                        <div class="form-group">
+                            <label for="pdpsearch">List masters or SKUs</label>
+                            <textarea name="masters" row="6" id="pdpsearch" class="form-control"
+                                placeholder="eg. LW5CFBA&#10;114827428"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if tasks %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Queue</h5>
+
+            {% for task in tasks %}
+
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="imagetask" id="{{task.ID}}">{{task.ID}}</h6>
+                    <small class="text-muted d-block">Status: <span
+                            class='{{task.status}}'>{{task.status}}</span></small>
+                    <!-- <small class="text-muted d-block">Created at: {{task.status}}</small> -->
+                    <small class="text-muted d-block"><a href=' {{task.url}}'>View
+                            Results</a></small>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if results %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Results</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Breadcrumb</th>
+                        <th scope="col">WWMT</th>
+                        <th scope="col">5Fs</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Image Count</th>
+                        <th scope="col">Color</th>
+                        <!-- <th scope="col">Flags</th> -->
+                        <th scope="col">Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td class="{{result.success}}">{{result.master}}</td>
+                        <td><a href="{{result.url}}">{{result.title}}</a></td>
+                        <td>{{result.breadcrumb}}</td>
+                        <td>{{result.wwmt}}</td>
+                        <td>{{result.fivef}}</td>
+                        <td>{{result.price}}</td>
+                        <td>{{result.img_count}}</td>
+                        <td>{{result.color}}</td>
+                        <!-- <td>{{result.flags}}</td> -->
+                        <td>{{result.size}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

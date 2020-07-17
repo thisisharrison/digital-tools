@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Image Search
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Search Image Status</h5>
+            <div class="card">
+                <div class="card-body">
+                    <form action="/image" method="post">
+                        <div class="form-group">
+                            <label for="imagesearch">List style colors</label>
+                            <textarea name="style_colors" row="6" id="imagesearch" class="form-control"
+                                placeholder="eg. LW5CFBA-041971"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if tasks %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Queue</h5>
+
+            {% for task in tasks %}
+
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="imagetask" id="{{task.ID}}">{{task.ID}}</h6>
+                    <small class="text-muted d-block">Status: <span
+                            class='{{task.status}}'>{{task.status}}</span></small>
+                    <!-- <small class="text-muted d-block">Created at: {{task.status}}</small> -->
+                    <small class="text-muted d-block"><a href=' {{task.url}}'>View
+                            Results</a></small>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if results %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Results</h5>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-6">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for style in results %}
+                    <tr>
+                        <td>{{ style }}</td>
+                        <td class="stat{{results[style]["status"]}}"><a
+                                href="{{results[style]["link"]}}">{{ results[style]["status"] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
