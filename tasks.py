@@ -2,6 +2,7 @@ from celery import Celery
 import os
 import redis
 from classes.images import Image
+from classes.pdps import PDP
 from helper import *
 
 app = Celery()
@@ -29,7 +30,17 @@ def imgstatus_task(queryset):
     
     return results
 
-# @app.task
-# def cdp_task(url):
-#     results = cdp_scrape(url)
-#     return results
+@app.task
+def pdpscrape_task(queryset):
+    styles = []
+    for style in queryset: 
+        obj = PDP(style)
+        styles.append(obj)
+    
+    results = []
+    for style in styles:
+        style.fill_in()
+        content = style.print_full
+        results.append(content)
+    
+    return results

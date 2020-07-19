@@ -18,6 +18,8 @@ def query_edit(query):
 
     return queryset
 
+
+
 def url_edit(url):
     if url[-1].isnumeric():
             parts = query.split("?sz=")
@@ -27,6 +29,8 @@ def url_edit(url):
     else:
         url = url+'?sz=9999'
     return url 
+
+
 
 def cdp_scrape(url):
     s = requests.Session()

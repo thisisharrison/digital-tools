@@ -68,22 +68,20 @@ Production PDP Search
                         <th scope="col">Price</th>
                         <th scope="col">Image Count</th>
                         <th scope="col">Color</th>
-                        <!-- <th scope="col">Flags</th> -->
                         <th scope="col">Size</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for result in results %}
                     <tr>
-                        <td class="{{result.success}}">{{result.master}}</td>
+                        <td class="{{result.status}}">{{result.master}}</td>
                         <td><a href="{{result.url}}">{{result.title}}</a></td>
-                        <td>{{result.breadcrumb}}</td>
+                        <td>{{result.bread}}</td>
                         <td>{{result.wwmt}}</td>
                         <td>{{result.fivef}}</td>
                         <td>{{result.price}}</td>
-                        <td>{{result.img_count}}</td>
                         <td>{{result.color}}</td>
-                        <!-- <td>{{result.flags}}</td> -->
+                        <td>{{result.img_count}}</td>
                         <td>{{result.size}}</td>
                     </tr>
                     {% endfor %}
