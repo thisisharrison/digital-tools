@@ -64,6 +64,14 @@ def pdp_result(task_id):
     # call result 
     task = pdpscrape_task.AsyncResult(task_id)
     results = task.get()
+    
+    # Gets back finished time in UTC format 
+    # print(task.date_done)
+
+    # info and results are identical
+    # print(task.info)
+    # print(task.result)
+
     # render result page
     return render_template('pdp.html', results=results)
 
