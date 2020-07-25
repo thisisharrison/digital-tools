@@ -1,11 +1,12 @@
 import requests 
 from bs4 import BeautifulSoup
 from flask import jsonify
+from helper import *
 
 class PDP():
-    def __init__(self, master):
+    def __init__(self, master, site):
         self.master = master
-        self.url = ''
+        self.url = self.add_url(site)
         self.status = ''
         self.title = ''
         self.wwmt = ''
@@ -17,14 +18,14 @@ class PDP():
         self.img_count = '' 
 
 
-    def add_url(self):
-        hk_domain = 'https://www.lululemon.com.hk/en-hk/p/dummy/'
-        self.url = hk_domain + self.master + '.html'
+    def add_url(self, site):
+        domain = site_selector(site) + '/p/dummy/'
+        self.url = domain + self.master + '.html'
         return self.url
     
 
     def fill_in(self):
-        url = self.add_url()
+        url = self.url
         s = requests.Session()
         response = s.get(url)
         self.status = response.status_code

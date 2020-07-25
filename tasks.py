@@ -31,10 +31,10 @@ def imgstatus_task(queryset):
     return results
 
 @app.task
-def pdpscrape_task(queryset):
+def pdpscrape_task(queryset, site):
     styles = []
     for style in queryset: 
-        obj = PDP(style)
+        obj = PDP(style, site)
         styles.append(obj)
     
     results = []

@@ -35,6 +35,9 @@ def url_edit(url):
 def cdp_scrape(url):
     s = requests.Session()
     response = s.get(url)
+
+    prefix = url_prefix(url)
+
     if response.status_code != 200:
         return jsonify ({'success': False})
     else: 
@@ -47,8 +50,7 @@ def cdp_scrape(url):
             a = pdp.find("a")
 
             href = a.get("href")
-            hk_prefix = "https://www.lululemon.com.hk/en-hk/p/lab-kosaten-pant/"
-            href = hk_prefix+href
+            href = prefix + href
 
             char = href.split("/")
             char0 = char[len(char)-1].split(".")
@@ -61,5 +63,22 @@ def cdp_scrape(url):
             result.append(product)
         return(result)
 
+def site_selector(site):
+    sites = {
+        'HK': 'https://www.lululemon.com.hk/en-hk',
+        'JP': 'https://www.lululemon.co.jp/ja-jp',
+        'AU': 'https://www.lululemon.com.au/en-au',
+        'UK': 'https://www.lululemon.co.uk/en-gb'
+    }
+    for country, domain in sites.items():
+        if site in domain or site in country:
+            return domain
+        
+    
 
 
+def url_prefix(url):
+    partial_prefix = url.split('-')[0]
+    print (partial_prefix)
+    return site_selector(partial_prefix)
+    

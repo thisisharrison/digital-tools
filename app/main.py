@@ -44,10 +44,11 @@ def image_result(task_id):
 def prodpdp():
     if request.method == 'POST':
         query = request.form.get('masters')
+        site = request.form.get('site')
         queryset = query_edit(query)
 
         # send master/skus to check pdps
-        task = pdpscrape_task.apply_async(args=[queryset])
+        task = pdpscrape_task.apply_async(args=[queryset, site])
         task_id = task.id
         return redirect(url_for('pdp_result', task_id=task_id))
 
