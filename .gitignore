@@ -1,3 +1,5 @@
 # Ignore redis binary dump (dump.rdb) files
 *.rdb
 venv
+.DS_Store
+__pycache__/
