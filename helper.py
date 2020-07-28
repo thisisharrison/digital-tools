@@ -21,9 +21,11 @@ def query_edit(query):
 
 
 def url_edit(url):
-    if url[-1].isnumeric():
-            parts = query.split("?sz=")
-            url = parts[0]+'?sz=9999'
+    if '?sz=' in url:
+        idx = url.find('?sz=') + 4
+        url = url [0:idx] + '9999'
+    elif '?icid' in url:
+        url = url + '&sz=9999'
     elif url[-1] != '/':
         url = url+'/?sz=9999'
     else:
