@@ -70,7 +70,10 @@ def site_selector(site):
         'HK': 'https://www.lululemon.com.hk/en-hk',
         'JP': 'https://www.lululemon.co.jp/ja-jp',
         'AU': 'https://www.lululemon.com.au/en-au',
-        'UK': 'https://www.lululemon.co.uk/en-gb'
+        'UK': 'https://www.lululemon.co.uk/en-gb',
+        'EU': 'https://www.eu.lululemon.com/en-lu',
+        'FR': 'https://www.lululemon.fr/fr-fr',
+        'DE': 'https://www.lululemon.de/de-de'
     }
     for country, domain in sites.items():
         if site in domain or site in country:
