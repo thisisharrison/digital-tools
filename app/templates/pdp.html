@@ -70,36 +70,37 @@ Production PDP Search
     <div class="row">
         <div class="col">
             <h5>Results</h5>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Breadcrumb</th>
-                        <th scope="col">WWMT</th>
-                        <th scope="col">5Fs</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Color</th>
-                        <th scope="col">Image Count</th>
-                        <th scope="col">Size</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for result in results %}
-                    <tr>
-                        <td class="{{result.status}}">{{result.master}}</td>
-                        <td><a href="{{result.url}}">{{result.title}}</a></td>
-                        <td>{{result.bread}}</td>
-                        <td>{{result.wwmt}}</td>
-                        <td>{{result.fivef}}</td>
-                        <td>{{result.price}}</td>
-                        <td>{{result.color}}</td>
-                        <td>{{result.img_count}}</td>
-                        <td>{{result.size}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Breadcrumb</th>
+                            <th scope="col">WWMT</th>
+                            <th scope="col">5Fs</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Color</th>
+                            <th scope="col">Image Count</th>
+                            <th scope="col">Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results %}
+                        <tr>
+                            <td class="{{result.status}}">{{result.master}}</td>
+                            <td><a href="{{result.url}}">{{result.title}}</a></td>
+                            <td>{{result.bread}}</td>
+                            <td>{{result.wwmt}}</td>
+                            <td>{{result.fivef}}</td>
+                            <td>{{result.price}}</td>
+                            <td>{{result.color}}</td>
+                            <td>{{result.img_count}}</td>
+                            <td>{{result.size}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

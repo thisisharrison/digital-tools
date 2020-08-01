@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-
+    
     const copyStyles = document.getElementById("stylebutton");
     const copyIDs = document.getElementById("pdpbutton");
     const copyCDPs = document.getElementById("cdpbutton");
@@ -72,4 +72,3 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location = 'cdp'
     }
 });
-
