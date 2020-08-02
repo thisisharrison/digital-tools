@@ -41,6 +41,10 @@ class PDP():
 
         response = s.get(url, auth=HTTPBasicAuth(email, password))
         self.status = response.status_code
+
+        if self.status != 200:
+            return self
+
         soup = BeautifulSoup(response.text,'html.parser')
         # Title
         self.title = soup.find(class_='product-name d-none d-lg-block').text

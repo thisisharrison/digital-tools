@@ -52,12 +52,12 @@ def prodpdp():
         queryset = query_edit(query)
 
         info = {'site': site, 'siteEnv': siteEnv, 'email': email, 'password': password, 'date': date}
-        print(query)
-        print(site)
-        print(siteEnv)
-        print(email)
-        print(password)
-        print(date)
+        # print(query)
+        # print(site)
+        # print(siteEnv)
+        # print(email)
+        # print(password)
+        # print(date)
 
         # send master/skus to check pdps
         task = pdpscrape_task.apply_async(args=[queryset, info])
@@ -94,7 +94,14 @@ def pdp_result(task_id):
 def prodcdp():
     if request.method == 'POST':
         query = request.form.get('cdp_url')
-        results = cdp_scrape(query)
+        siteEnv = request.form.get('siteEnv')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        date = request.form.get('date')
+
+        info = {'siteEnv': siteEnv, 'email': email, 'password': password, 'date': date}
+        
+        results = cdp_scrape(query, info)
         return render_template('cdp.html', results=results)
     else:
         return render_template('cdp.html')

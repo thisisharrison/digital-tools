@@ -44,14 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // environment selection
     const form = document.querySelector('form')
 
-    // $('form').one('submit', function (e) {
-    //     e.preventDefault();
-    //     // do your things ...
-    //     prompt("OK?")
-    //     // and when you done:
-    //     $(this).submit();
-    // });
-
     const formSubmit = document.getElementById('formSubmit')
     form.onsubmit = function envCheck(evt) {
         const prodEnv = document.getElementById('prodEnv').checked

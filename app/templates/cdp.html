@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-Production CDP Search
+CDP Search
 {% endblock %}
 
 {% block content %}
@@ -18,6 +18,59 @@ Production CDP Search
                             <input type="text" name="cdp_url" id="cdpsearch" class="form-control"
                                 placeholder="Eg. https://www.lululemon.com.hk/en-hk/c/women-bottoms/women-bottoms/">
                         </div>
+                        <fieldset class="form-group">
+                            <div class="row">
+                                <legend class="col-form-label col-sm-2 pt-0">Select environment:</legend>
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="siteEnv" id="prodEnv" value="production" checked>
+                                        <label class="form-check-label" for="prodEnv">
+                                            Production
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="siteEnv" id="stagEnv" value="staging">
+                                        <label class="form-check-label" for="stagEnv">
+                                            Staging
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <!-- modal for staging info -->
+                        <div class="modal fade" id="stagEnvInfo" tabindex="-1" role="dialog" aria-labelledby="stagEnvInfo" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="stagEnvInfo">Staging info</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                        
+                                        <div class="form-group">
+                                            <label for="email" class="col-form-label">Email:</label>
+                                            <input type="text" class="form-control" name="email" id="email">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password" class="col-form-label">Password:</label>
+                                            <input type="password" class="form-control" name="password" id="password"></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="date" class="col-form-label">Date:</label>
+                                            <input type="date" class="form-control" name="date" id="date"></input>
+                                        </div>
+                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button id="readyButton" type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end of modal -->
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
@@ -31,6 +84,9 @@ Production CDP Search
     <div class="row">
         <div class="col">
             <h5>Results</h5>
+            {% if info %}
+            <small class="text-muted d-block">{{ info.siteEnv }} | {{ info.date }}</small>
+            {% endif %}
         </div>
     </div>
 

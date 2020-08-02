@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from flask import jsonify
 import requests
+from requests.auth import HTTPBasicAuth
 
 def query_edit(query):
     
@@ -20,31 +21,39 @@ def query_edit(query):
 
 
 
-def url_edit(url):
-    if '?sz=' in url:
-        idx = url.find('?sz=') + 4
-        url = url [0:idx] + '9999'
-    elif '?icid' in url:
-        url = url + '&sz=9999'
-    elif url[-1] != '/':
-        url = url+'/?sz=9999'
+def url_edit(url, date=''):
+    if len(date) > 0:
+        date_s = parsedate(date)
+    
+    if '?' in url:
+        idx = url.find('?')
+        url = url[0:idx]
+
+    if len(date) > 0:
+        url = url + '?__siteDate=' + date_s + '&sz=9999'
     else:
-        url = url+'?sz=9999'
-    return url 
+        url = url + '?sz=9999'
+
+    return url
 
 
+def cdp_scrape(url, info):
+    email = info['email']
+    password = info['password']
+    date = info['date']
+    siteEnv = info['siteEnv']
 
-def cdp_scrape(url):
+    url = url_edit(url, date)
+
     s = requests.Session()
-    response = s.get(url)
+    response = s.get(url, auth=HTTPBasicAuth(email, password))
 
-    prefix = url_prefix(url)
+    prefix = url_prefix(url, siteEnv)
+    print(prefix)
 
     if response.status_code != 200:
         return jsonify ({'success': False})
     else: 
-        url = url_edit(url)
-        response = s.get(url)
         soup = BeautifulSoup(response.text, "html.parser")
         pdps = soup.find_all(class_="pdp-link")
         result = []
@@ -65,7 +74,7 @@ def cdp_scrape(url):
             result.append(product)
         return(result)
 
-def site_selector(site, siteEnv):
+def site_selector(site, siteEnv=''):
     # siteEnv = 'staging' / 'production'
 
     production = {
@@ -80,13 +89,17 @@ def site_selector(site, siteEnv):
 
     staging = {
         'HK': 'https://staging-eu01-lululemon.demandware.net/s/HK/en-hk',
-        'JP': 'https://staging-eu01-lululemon.demandware.net/s/JP/ja-jp/',
-        'AU': 'https://staging-eu01-lululemon.demandware.net/s/AU/en-au/'
+        'JP': 'https://staging-eu01-lululemon.demandware.net/s/JP/ja-jp',
+        'AU': 'https://staging-eu01-lululemon.demandware.net/s/AU/en-au',
+        'UK': 'https://staging-eu01-lululemon.demandware.net/s/UK/en-gb',
+        'EU': 'https://staging-eu01-lululemon.demandware.net/s/EU/en-lu',
+        'FR': 'https://staging-eu01-lululemon.demandware.net/s/FR/fr-fr',
+        'DE': 'https://staging-eu01-lululemon.demandware.net/s/DE/de-de'
     }
 
         # Eg. 'https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/p/adapt-to-you-tank/LW1CQ3S.html?__siteDate=20200811'
 
-    if siteEnv == 'production':
+    if siteEnv == 'production' or siteEnv == '':
         for country, domain in production.items():
             if site in domain or site in country:
                 return domain
@@ -98,11 +111,20 @@ def site_selector(site, siteEnv):
     
 
 
-def url_prefix(url):
-    partial_prefix = url.split('-')[0]
-    print (partial_prefix)
-    return site_selector(partial_prefix)
+def url_prefix(url, siteEnv):
+    parts = url.split('/')
+    if siteEnv == 'staging':
+        for part in parts:
+            if len(part) == 2:
+                return site_selector(part, siteEnv)
+    else:
+        return site_selector(parts[2], siteEnv)
+    
+        
     
 def parsedate(string):
     # Eg. '2020-08-02'
-    return string.replace('-','')
+    if not '-' in string:
+        return ''
+    else:
+        return string.replace('-','')
