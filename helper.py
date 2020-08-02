@@ -65,8 +65,10 @@ def cdp_scrape(url):
             result.append(product)
         return(result)
 
-def site_selector(site):
-    sites = {
+def site_selector(site, siteEnv):
+    # siteEnv = 'staging' / 'production'
+
+    production = {
         'HK': 'https://www.lululemon.com.hk/en-hk',
         'JP': 'https://www.lululemon.co.jp/ja-jp',
         'AU': 'https://www.lululemon.com.au/en-au',
@@ -75,10 +77,24 @@ def site_selector(site):
         'FR': 'https://www.lululemon.fr/fr-fr',
         'DE': 'https://www.lululemon.de/de-de'
     }
-    for country, domain in sites.items():
-        if site in domain or site in country:
-            return domain
-        
+
+    staging = {
+        'HK': 'https://staging-eu01-lululemon.demandware.net/s/HK/en-hk',
+        'JP': 'https://staging-eu01-lululemon.demandware.net/s/JP/ja-jp/',
+        'AU': 'https://staging-eu01-lululemon.demandware.net/s/AU/en-au/'
+    }
+
+# 'https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/p/adapt-to-you-tank/LW1CQ3S.html?__siteDate=20200811'
+
+    if siteEnv == 'production':
+        for country, domain in production.items():
+            if site in domain or site in country:
+                return domain
+    elif siteEnv == 'staging':
+        for country, domain in staging.items():
+            if site in domain or site in country:
+                return domain
+
     
 
 
@@ -87,3 +103,6 @@ def url_prefix(url):
     print (partial_prefix)
     return site_selector(partial_prefix)
     
+def parsedate(string):
+    # Eg. '2020-08-02'
+    return string.replace('-','')

@@ -1,12 +1,13 @@
-import requests 
+import requests
+from requests.auth import HTTPBasicAuth
 from bs4 import BeautifulSoup
 from flask import jsonify
 from helper import *
 
 class PDP():
-    def __init__(self, master, site):
+    def __init__(self, master, info):
         self.master = master
-        self.url = self.add_url(site)
+        self.url = self.add_url(info)
         self.status = ''
         self.title = ''
         self.wwmt = ''
@@ -18,16 +19,27 @@ class PDP():
         self.img_count = '' 
 
 
-    def add_url(self, site):
-        domain = site_selector(site) + '/p/dummy/'
-        self.url = domain + self.master + '.html'
+    def add_url(self, info):
+        site = info['site']
+        siteEnv = info['siteEnv']
+        date = info['date']
+        
+        domain = site_selector(site, siteEnv) + '/p/dummy/'
+        
+        if len(date) == 0:
+            self.url = domain + self.master + '.html'
+        else:
+            date_s = parsedate(date)
+            self.url = domain + self.master + '.html?__siteDate=' + date_s
         return self.url
     
 
-    def fill_in(self):
+    def fill_in(self, info):
+        email = info['email']
+        password = info['password']
         url = self.url
         s = requests.Session()
-        response = s.get(url)
+        response = s.get(url, auth=HTTPBasicAuth(email, password))
         self.status = response.status_code
         soup = BeautifulSoup(response.text,'html.parser')
         # Title

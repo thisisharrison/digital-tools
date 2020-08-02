@@ -52,13 +52,15 @@ def prodpdp():
         queryset = query_edit(query)
 
         info = {'site': site, 'siteEnv': siteEnv, 'email': email, 'password': password, 'date': date}
+        print(query)
+        print(site)
         print(siteEnv)
         print(email)
         print(password)
         print(date)
 
         # send master/skus to check pdps
-        task = pdpscrape_task.apply_async(args=[queryset, site])
+        task = pdpscrape_task.apply_async(args=[queryset, info])
         task_id = task.id
         return redirect(url_for('pdp_result', task_id=task_id))
 

@@ -31,15 +31,17 @@ def imgstatus_task(queryset):
     return results
 
 @app.task
-def pdpscrape_task(queryset, site):
+def pdpscrape_task(queryset, info):
     styles = []
+    # site = info.site
+    # siteEnv = info.siteEnv
     for style in queryset: 
-        obj = PDP(style, site)
+        obj = PDP(style, info)
         styles.append(obj)
     
     results = []
     for style in styles:
-        style.fill_in()
+        style.fill_in(info)
         content = style.print_full
         results.append(content)
     
