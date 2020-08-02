@@ -45,7 +45,17 @@ def prodpdp():
     if request.method == 'POST':
         query = request.form.get('masters')
         site = request.form.get('site')
+        siteEnv = request.form.get('siteEnv')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        date = request.form.get('date')
         queryset = query_edit(query)
+
+        info = {'site': site, 'siteEnv': siteEnv, 'email': email, 'password': password, 'date': date}
+        print(siteEnv)
+        print(email)
+        print(password)
+        print(date)
 
         # send master/skus to check pdps
         task = pdpscrape_task.apply_async(args=[queryset, site])

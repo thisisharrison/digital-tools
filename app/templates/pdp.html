@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-Production PDP Search
+PDP Search
 {% endblock %}
 
 
@@ -12,7 +12,8 @@ Production PDP Search
             <h5>Search Masters or SKU PDP Data</h5>
             <div class="card">
                 <div class="card-body">
-                    <form action="/pdp" method="post">
+                    <form action="#" method="post"> 
+                        <!-- took out action /pdp -->
                         <div class="form-group">
                             <label for="pdpsearch">List masters or SKUs</label>
                             <textarea name="masters" row="6" id="pdpsearch" class="form-control"
@@ -31,6 +32,60 @@ Production PDP Search
                                 <option value="DE">DE</option>
                             </select>
                         </div>
+                        <fieldset class="form-group">
+                            <div class="row">
+                                <legend class="col-form-label col-sm-2 pt-0">Select environment:</legend>
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="siteEnv" id="prodEnv" value="production" checked>
+                                        <label class="form-check-label" for="prodEnv">
+                                            Production
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="siteEnv" id="stagEnv" value="staging">
+                                        <label class="form-check-label" for="stagEnv">
+                                            Staging
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <!-- modal for staging info -->
+                        <div class="modal fade" id="stagEnvInfo" tabindex="-1" role="dialog" aria-labelledby="stagEnvInfo"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="stagEnvInfo">Staging info</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                            <div class="form-group">
+                                                <label for="email" class="col-form-label">Email:</label>
+                                                <input type="text" class="form-control" name="email" id="email">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password" class="col-form-label">Password:</label>
+                                                <input type="password" class="form-control" name="password" id="password"></input>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="date" class="col-form-label">Date:</label>
+                                                <input type="date" class="form-control" name="date" id="date"></input>
+                                            </div>
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button id="readyButton" type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end of modal -->
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
