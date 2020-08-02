@@ -33,8 +33,6 @@ def imgstatus_task(queryset):
 @app.task
 def pdpscrape_task(queryset, info):
     styles = []
-    # site = info.site
-    # siteEnv = info.siteEnv
     for style in queryset: 
         obj = PDP(style, info)
         styles.append(obj)

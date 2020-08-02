@@ -84,7 +84,7 @@ def site_selector(site, siteEnv):
         'AU': 'https://staging-eu01-lululemon.demandware.net/s/AU/en-au/'
     }
 
-# 'https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/p/adapt-to-you-tank/LW1CQ3S.html?__siteDate=20200811'
+        # Eg. 'https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/p/adapt-to-you-tank/LW1CQ3S.html?__siteDate=20200811'
 
     if siteEnv == 'production':
         for country, domain in production.items():
