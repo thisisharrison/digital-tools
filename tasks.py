@@ -2,7 +2,7 @@ from celery import Celery
 import os
 import redis
 from classes.images import Image
-from classes.pdps import PDP
+from classes.pdps import PDP, pdpscraper
 from helper import *
 
 app = Celery()
@@ -36,11 +36,5 @@ def pdpscrape_task(queryset, info):
     for style in queryset: 
         obj = PDP(style, info)
         styles.append(obj)
-    
-    results = []
-    for style in styles:
-        style.fill_in(info)
-        content = style.print_full
-        results.append(content)
-    
-    return results
+
+    return pdpscraper(styles, info)

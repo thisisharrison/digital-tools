@@ -34,11 +34,11 @@ class PDP():
         return self.url
     
 
-    def fill_in(self, info):
+    def fill_in(self, s, info):
         email = info['email']
         password = info['password']
         url = self.url
-        s = requests.Session()
+
         response = s.get(url, auth=HTTPBasicAuth(email, password))
         self.status = response.status_code
         soup = BeautifulSoup(response.text,'html.parser')
@@ -86,3 +86,15 @@ class PDP():
         return {'master': self.master, 'url': self.url, 'status': self.status, 'title': self.title, 'wwmt': self.wwmt,
         'fivef': self.fivef, 'bread': self.bread, 'color': self.color, 'price': self.price, 'size': self.size,
         'img_count': self.img_count}
+
+def pdpscraper(styles, info):
+    s = requests.Session()
+    
+    results = [] 
+
+    for style in styles:
+        style.fill_in(s, info)
+        content = style.print_full
+        results.append(content)
+    
+    return results
