@@ -70,8 +70,11 @@ Image Search
                     {% for result in results %}
                     <tr>
                         <td>{{ result['style'] }}</td>
-                        <td class="stat{{result['status']}}"><a
-                                href="{{result['url']}}">{{ result['status'] }}</td>
+                        <td class="stat{{result['status']}}">
+                            <a href="{{result['url']}}">
+                                {{ result['status_read'] }}
+                            </a>    
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
