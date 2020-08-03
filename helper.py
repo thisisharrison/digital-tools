@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from flask import jsonify
 import requests
 from requests.auth import HTTPBasicAuth
+from datetime import datetime
 
 def query_edit(query):
     
@@ -23,7 +24,10 @@ def query_edit(query):
 
 def url_edit(url, date=''):
     if len(date) > 0:
-        date_s = parsedate(date)
+        # Add time string 
+        now = datetime.now()
+        current_time = now.strftime("%H%M")
+        date_s = parsedate(date) + current_time
     
     if '?' in url:
         idx = url.find('?')
@@ -33,7 +37,7 @@ def url_edit(url, date=''):
         url = url + '?__siteDate=' + date_s + '&sz=9999'
     else:
         url = url + '?sz=9999'
-
+    
     return url
 
 
@@ -45,10 +49,13 @@ def cdp_scrape(url, info):
 
     url = url_edit(url, date)
 
+    print(url)
+
     s = requests.Session()
     response = s.get(url, auth=HTTPBasicAuth(email, password))
 
     prefix = url_prefix(url, siteEnv)
+    
     print(prefix)
 
     if response.status_code != 200:
