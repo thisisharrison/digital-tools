@@ -13,6 +13,8 @@ redis = "==3.4.1"
 requests = "*"
 bs4 = "*"
 flask-session = "*"
+datetime = "*"
+flask-socketio = "*"
 
 [requires]
 python_version = "3.7"
