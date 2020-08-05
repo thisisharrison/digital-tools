@@ -2,7 +2,9 @@ from bs4 import BeautifulSoup
 from flask import jsonify
 import requests
 from requests.auth import HTTPBasicAuth
-from datetime import datetime
+import datetime
+from tzlocal import get_localzone
+import pytz
 
 def query_edit(query):
     
@@ -25,7 +27,7 @@ def query_edit(query):
 def url_edit(url, date=''):
     if len(date) > 0:
         # Add time string 
-        now = datetime.now()
+        now = datetime.datetime.now()
         current_time = now.strftime("%H%M")
         date_s = parsedate(date) + current_time
     
@@ -135,3 +137,37 @@ def parsedate(string):
         return ''
     else:
         return string.replace('-','')
+
+def task_update(task_type, session_type, tasks):
+    print('-------- ATTENTION --------')
+    print(task_type)
+    print(tasks)
+    
+    local_tz = get_localzone()
+    print(local_tz)
+    tz = pytz.timezone(str(local_tz))
+
+
+    for task in tasks:
+        task_id = task['task_id']
+        t = task_type.AsyncResult(task_id)
+        status = t.state
+        
+        if status == 'SUCCESS':
+            finish_at = t.date_done
+
+            utc_time = finish_at.replace(tzinfo = pytz.UTC)
+            print("UTC: ", utc_time)
+            local_time = utc_time.astimezone(tz)
+            print("Local: ", local_time)
+
+            finish_s = local_time.strftime("%D %H:%M:%S")
+            task['finish_at'] = finish_s
+            task['status'] = status
+        else:
+            task['status'] = status
+            continue
+    
+    print(tasks)
+
+    return tasks

@@ -30,16 +30,16 @@ Image Search
         <div class="col">
             <h5>Queue</h5>
 
-            {% for task_id, hash in tasks.items() %}
+            {% for task in tasks %}
 
             <div class="card">
                 <div class="card-body">
-                    <h6 class="imagetask" id="{{task_id}}">{{ task_id }}</h6>
+                    <h6 class="imagetask" id="{{ task.task_id }}">{{ task.task_id }}</h6>
                     <small class="text-muted d-block">Status: <span
-                            class='{{ hash.state }}'>{{ hash.state }}</span></small>
-                    <small class="text-muted d-block">Created at: {{ hash.started_at }}</small>
-                    <small class="text-muted d-block">Finished at: {{ hash.finished_at }}</small>
-                    <small class="text-muted d-block"><a href=' /image/{{ task_id }}'>View
+                            class='{{ task.status }}'>{{ task.status }}</span></small>
+                    <small class="text-muted d-block">Created at: {{ task.start_at }}</small>
+                    <small class="text-muted d-block">Finished at: {{ task.finish_at }}</small>
+                    <small class="text-muted d-block"><a href=' /image/{{ task.task_id }}'>View
                             Results</a></small>
                 </div>
             </div>

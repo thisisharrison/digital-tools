@@ -5,8 +5,11 @@ from flask_session import Session
 # import redis
 # from datetime import datetime
 import datetime
-import pytz
-from tzlocal import get_localzone
+import time
+# from dateutil.tz import tzlocal
+# from tzlocal import get_localzone
+# import pytz
+from flask_socketio import SocketIO, emit
 import uuid
 from tasks import hello, imgstatus_task, pdpscrape_task
 from helper import *
@@ -14,6 +17,7 @@ from helper import *
 app = Flask(__name__)
 app.config.from_object('config.DevConfig')
 Session(app)
+socketio = SocketIO(app)
 
 
 # key = secrets.token_urlsafe(16)
@@ -46,73 +50,39 @@ def image():
         task = imgstatus_task.apply_async(args=[queryset])
         task_id = task.id
         
-        now = datetime.now()
+        now = datetime.datetime.now()
         now_s = now.strftime("%D %H:%M:%S")
 
-        # TO-DO
-        # add task queue page
+        #  session[task_name] = [
+        # {task_id: id, start: start, finish: finish, status: status},
+        #   ...
+        # ]
 
-        # {task_id:
-        #   {time: time,
-        #   status: status,
-        #   finished: finished}
-        # }
+        task_object = {'task_id': task_id, 'start_at': now_s, 'finish_at': '', 'status': ''}
 
         if not session.get('uuid'):
             session['uuid'] = uuid.uuid4()
-            session['imageTasks'] = {task_id: {'started_at': now_s}}
+            session['imageTasks'] = [task_object]
         else:
-            session['imageTasks'][task_id] = {'started_at': now_s}
+            if len(session['imageTasks']) > 4:
+                session['imageTasks'].pop(0)    
+            session['imageTasks'].append(task_object)
             
         print(session['uuid'])
         print(session['imageTasks'])
         
-        return redirect(url_for('image_result', task_id=task_id))
+        # return redirect(url_for('image_result', task_id=task_id))
+        return redirect(url_for('image'))
+        
 
     else:
 
         if session.get('uuid'):
             image_tasks = session['imageTasks']
-            tasks = hash_update(imgstatus_task, 'imageTasks', image_tasks)
-            return render_template('image.html', tasks = tasks)
+            tasks = task_update(imgstatus_task, 'imageTasks', image_tasks)
+            return render_template('image.html', tasks = tasks[::-1])
         else: 
             return render_template('image.html')
-
-def hash_update(task_type, session_type, tasks):
-    print('-------- ATTENTION --------')
-    print(task_type)
-    print(tasks)
-    for task_id in tasks:
-        task = task_type.AsyncResult(task_id)
-        finished_at = str(task.date_done)
-        finished_at = datetime.strptime(finished_at, '%Y-%m-%d %H:%M:%S.%f')
-        print(finished_at)
-
-        print('-------- TIMEZONE --------')
-        local_tz = get_localzone()
-        print(local_tz)
-        
-        
-        # local_timezone = datetime.now(datetime.timetz).astimezone().tzinfo
-        # local_time = local_timezone.localize(finished_at)
-        
-        # print(local_time)
-        # print(local_time.tzinfo)
-        finished_at = finished_at.strftime("%D %H:%M:%S")
-        state = task.state
-
-        print('-------- TASKS --------')
-        print(task)
-        print(finished_at)
-        print(state)
-
-        session_task = session[session_type][task.id]
-        
-        started_at = session_task['started_at']
-
-        session_task['finished_at'] = finished_at
-        session_task['state'] = state
-    return tasks
         
 
 
@@ -186,3 +156,20 @@ def prodcdp():
     else:
         return render_template('cdp.html')
     return render_template('cdp.html')
+
+@socketio.on('check status')
+def check_status(data):
+    tasks = data['data']
+    print(f"Total IDS: {tasks}")
+    # pending = []
+    # complete = []
+    # for i in tasks:
+    #     task = imgstatus_task.AsyncResult(i)
+    #     status = task.state
+    #     if status != "SUCCESS" and status != "FAILURE":
+    #         pending.append(i)
+    #     else:
+    #         complete.append(i)
+    #         socketio.emit('update complete', {'ID': complete})
+    # time.sleep(5)
+    # socketio.emit('update pending', {'ID': pending})
