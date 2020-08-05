@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-gunicorn = "*"
+gunicorn = "==18.0"
 celery = "*"
 redis = "==3.4.1"
 requests = "*"
