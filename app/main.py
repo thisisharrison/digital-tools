@@ -15,9 +15,9 @@ from tasks import hello, imgstatus_task, pdpscrape_task
 from helper import *
 
 app = Flask(__name__)
-app.config.from_object('config.DevConfig')
+app.config.from_object('config.ProdConfig')
 Session(app)
-socketio = SocketIO(app)
+# socketio = SocketIO(app)
 
 
 # key = secrets.token_urlsafe(16)
@@ -157,10 +157,10 @@ def prodcdp():
         return render_template('cdp.html')
     return render_template('cdp.html')
 
-@socketio.on('check status')
-def check_status(data):
-    tasks = data['data']
-    print(f"Total IDS: {tasks}")
+# @socketio.on('check status')
+# def check_status(data):
+#     tasks = data['data']
+#     print(f"Total IDS: {tasks}")
     # pending = []
     # complete = []
     # for i in tasks:

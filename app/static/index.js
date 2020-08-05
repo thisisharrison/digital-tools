@@ -1,41 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    // var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
     // Collect task ids from page
-    let imagetasks = document.querySelectorAll('.imagetask')
-    let tasksid = []
-    for (let i = 0; i < imagetasks.length; i++) {
-        tasksid.push(imagetasks[i].innerText);
-    }
-    // When connected, send task ids to check
-    socket.on('connect', () => {
-        socket.emit('check status', { 'data': tasksid })
-        console.log('Sending IDs to check... ' + tasksid)
-    });
+    // let imagetasks = document.querySelectorAll('.imagetask')
+    // let tasksid = []
+    // for (let i = 0; i < imagetasks.length; i++) {
+    //     tasksid.push(imagetasks[i].innerText);
+    // }
+    // // When connected, send task ids to check
+    // socket.on('connect', () => {
+    //     socket.emit('check status', { 'data': tasksid })
+    //     console.log('Sending IDs to check... ' + tasksid)
+    // });
 
 
     // Receive update to task status
-    socket.on('update pending', data => {
-        let pending = data['ID'].length
-        if (pending != 0) {
-            socket.emit('check status', { 'data': tasksid })
-            console.log('Checking Pending IDs... ' + data['ID'])
-        }
-        else {
-            console.log('All Done')
-        }
-        socket.on('update complete', data => {
-            let completeid = data['ID']
-            for (let i = 0; i < completeid.length; i++) {
-                let p = document.getElementById(completeid[i])
-                let s = p.nextElementSibling
-                s.className = 'SUCCESS'
-                s.style.color = '#6c757d'
-                s.innerText = 'Status: SUCCESS'
-            }
-        });
-    });
+    // socket.on('update pending', data => {
+    //     let pending = data['ID'].length
+    //     if (pending != 0) {
+    //         socket.emit('check status', { 'data': tasksid })
+    //         console.log('Checking Pending IDs... ' + data['ID'])
+    //     }
+    //     else {
+    //         console.log('All Done')
+    //     }
+    //     socket.on('update complete', data => {
+    //         let completeid = data['ID']
+    //         for (let i = 0; i < completeid.length; i++) {
+    //             let p = document.getElementById(completeid[i])
+    //             let s = p.nextElementSibling
+    //             s.className = 'SUCCESS'
+    //             s.style.color = '#6c757d'
+    //             s.innerText = 'Status: SUCCESS'
+    //         }
+    //     });
+    // });
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
