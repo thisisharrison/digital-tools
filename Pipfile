@@ -15,6 +15,8 @@ bs4 = "*"
 flask-session = "*"
 datetime = "*"
 flask-socketio = "*"
+tzlocal = "*"
+pytz = "*"
 
 [requires]
 python_version = "3.7"
