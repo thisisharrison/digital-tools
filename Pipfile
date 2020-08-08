@@ -16,6 +16,7 @@ flask-session = "*"
 flask-socketio = "*"
 tzlocal = "*"
 pytz = "*"
+eventlet = "*"
 
 [requires]
 python_version = "3.7"
