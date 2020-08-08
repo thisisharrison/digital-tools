@@ -18,7 +18,6 @@ app = Flask(__name__)
 app.config.from_object('config.ProdConfig')
 Session(app)
 socketio = SocketIO(app)
-socketio.run(app)
 
 # key = secrets.token_urlsafe(16)
 # SESSION_TYPE = 'redis'
