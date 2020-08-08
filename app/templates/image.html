@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% block head %}
+<script src="{{ url_for('static', filename='queue.js') }}"></script>
+{% endblock %}
+
 {% block title %}
 Image Search
 {% endblock %}
@@ -24,10 +28,9 @@ Image Search
         </div>
     </div>
 </div>
-{% if tasks %}
-<script src="{{ url_for('static', filename='socket.js') }}"></script>
 
-<div class="container">
+
+<div class="container" id="queue">
     <div class="row">
         <div class="col">
             <h5>Queue</h5>
@@ -51,7 +54,6 @@ Image Search
         </div>
     </div>
 </div>
-{% endif %}
 
 {% if results %}
 <div class="container">

@@ -69,14 +69,37 @@ def image():
         return redirect(url_for('image'))
 
     else:
-
-        if session.get('imageTasks'):
-            image_tasks = session['imageTasks']
-            tasks = task_update(imgstatus_task, 'imageTasks', image_tasks)
-            return render_template('image.html', tasks = tasks[::-1])
-        else: 
-            return render_template('image.html')
+        return render_template('image.html')
+        # if session.get('imageTasks'):
+        #     image_tasks = session['imageTasks']
+        #     tasks = task_update(imgstatus_task, 'imageTasks', image_tasks)
+        #     return render_template('image.html', tasks = tasks[::-1])
+        # else: 
+        #     return render_template('image.html')
         
+@app.route("/queue/<task>")
+def queue(task):
+    if task == 'pdp':
+        task_type = pdpscrape_task
+        session_name = 'pdpTasks'
+        # tasks = session['pdpTasks']
+        
+    elif task == 'image':
+        task_type = imgstatus_task
+        session_name = 'imageTasks'
+        # tasks = session['imageTasks']
+    
+    if session.get(session_name):
+        tasks = session[session_name]
+    else:
+        tasks = None
+    
+    if tasks != None:
+        tasks = task_update(task_type, session_name, tasks)
+        return render_template('queue.html', tasks = tasks[::-1])
+    else:
+        return render_template('queue.html')
+    
 
 
 @app.route("/image/<task_id>")
@@ -114,12 +137,13 @@ def prodpdp():
         # return redirect(url_for('pdp_result', task_id=task_id))
 
     else:
-        if session.get('pdpTasks'):
-            pdp_tasks = session['pdpTasks']
-            tasks = task_update(pdpscrape_task, 'pdpTasks', pdp_tasks)
-            return render_template('pdp.html', tasks = tasks[::-1], user = session['user'])
-        else: 
-            return render_template('pdp.html')
+        return render_template('pdp.html')
+        # if session.get('pdpTasks'):
+        #     pdp_tasks = session['pdpTasks']
+        #     tasks = task_update(pdpscrape_task, 'pdpTasks', pdp_tasks)
+        #     return render_template('pdp.html', tasks = tasks[::-1], user = session['user'])
+        # else: 
+        #     return render_template('pdp.html')
         
 
 
