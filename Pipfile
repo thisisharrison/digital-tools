@@ -17,6 +17,7 @@ flask-socketio = "*"
 tzlocal = "*"
 pytz = "*"
 gevent = "*"
+gevent-websocket = "*"
 
 [requires]
 python_version = "3.7"

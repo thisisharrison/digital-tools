@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c78674addfed828aee77084120109aafd04104cc7dc30ef32429ec1a8579ef74"
+            "sha256": "faa8048bda76cd56d917a8831a661e33ae2bea42a7d6f858835080dfef46fec1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -141,6 +141,14 @@
             "index": "pypi",
             "version": "==20.6.2"
         },
+        "gevent-websocket": {
+            "hashes": [
+                "sha256:17b67d91282f8f4c973eba0551183fc84f56f1c90c8f6b6b30256f31f66f5242",
+                "sha256:7eaef32968290c9121f7c35b973e2cc302ffb076d018c9068d2f5ca8b2d85fb0"
+            ],
+            "index": "pypi",
+            "version": "==0.10.1"
+        },
         "greenlet": {
             "hashes": [
                 "sha256:1000038ba0ea9032948e2156a9c15f5686f36945e8f9906e6b8db49f358e7b52",
@@ -166,10 +174,10 @@
         },
         "gunicorn": {
             "hashes": [
-                "sha256:0a05e3c38fdc553d93ed9e0a5e743be9317b410861e59fb859cdba2d81fe817e",
-                "sha256:ef69dea4814df95e64e3f40b47b7ffedc6911c5009233be9d01cfd0d14aa3f50",
                 "sha256:0806b5e8a2eb8ba9ac1be65d7b743ec896fc25f5d6cb16c5e051540157b315bb",
-                "sha256:b61f38786af6b8d644b530552012d669c7415fcf5852de320f290800db97983d"
+                "sha256:b61f38786af6b8d644b530552012d669c7415fcf5852de320f290800db97983d",
+                "sha256:ef69dea4814df95e64e3f40b47b7ffedc6911c5009233be9d01cfd0d14aa3f50",
+                "sha256:0a05e3c38fdc553d93ed9e0a5e743be9317b410861e59fb859cdba2d81fe817e"
             ],
             "index": "pypi",
             "version": "==20.0"
