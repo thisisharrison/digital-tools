@@ -17,7 +17,7 @@ from helper import *
 app = Flask(__name__)
 app.config.from_object('config.ProdConfig')
 Session(app)
-# socketio = SocketIO(app)
+socketio = SocketIO(app)
 
 
 # key = secrets.token_urlsafe(16)
@@ -40,12 +40,14 @@ def index():
 
 
 def updateSession(taskName, task_object):
-    if not session.get('taskName'):
+    if not session.get(taskName):
         session[taskName] = [task_object]
     else:
         # only keep last 5 tasks
         if len(session[taskName]) > 4:
             session[taskName].pop(0)    
+            session[taskName].append(task_object)
+        else:
             session[taskName].append(task_object)            
     print(session[taskName])
     return
@@ -173,19 +175,24 @@ def prodcdp():
             return render_template('cdp.html')
     
 
-# @socketio.on('check status')
-# def check_status(data):
-#     tasks = data['data']
-#     print(f"Total IDS: {tasks}")
-    # pending = []
-    # complete = []
-    # for i in tasks:
-    #     task = imgstatus_task.AsyncResult(i)
-    #     status = task.state
-    #     if status != "SUCCESS" and status != "FAILURE":
-    #         pending.append(i)
-    #     else:
-    #         complete.append(i)
-    #         socketio.emit('update complete', {'ID': complete})
-    # time.sleep(5)
-    # socketio.emit('update pending', {'ID': pending})
+@socketio.on('check status')
+def check_status(data):
+    pending_tasks = data['ids']
+    path = data['task']
+    print('======= SOCKET CHECKING =======')
+    print("Checking IDS: ",pending_tasks)
+    print("Checking TASK TYPE: ",path)
+    
+    complete = []
+    if path == 'pdp':
+        task_type = pdpscrape_task
+    elif path == 'image':
+        task_type = imgstatus_task
+
+    for i in pending_tasks:
+        task = task_type.AsyncResult(i)
+        status = task.state
+        if status == "SUCCESS":
+            complete.append(i)
+            socketio.emit('update complete', {'ID': complete})
+    

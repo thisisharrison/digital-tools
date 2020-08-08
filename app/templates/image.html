@@ -25,6 +25,8 @@ Image Search
     </div>
 </div>
 {% if tasks %}
+<script src="{{ url_for('static', filename='socket.js') }}"></script>
+
 <div class="container">
     <div class="row">
         <div class="col">
@@ -34,7 +36,7 @@ Image Search
 
             <div class="card">
                 <div class="card-body">
-                    <h6 class="imagetask" id="{{ task.task_id }}">{{ task.task_id }}</h6>
+                    <h6 class="{{ task.status }}Ids" id="{{ task.task_id }}">{{ task.task_id }}</h6>
                     <small class="text-muted d-block">Status: <span
                             class='{{ task.status }}'>{{ task.status }}</span></small>
                     <small class="text-muted d-block">Created at: {{ task.start_at }}</small>
