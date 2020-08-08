@@ -22,42 +22,75 @@ def query_edit(query):
 
     return queryset
 
+# TYPES OF URLS
+# https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/c/new-drop-qa/new-drop-qa/ [OK]
+# https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/c/new-drop-qa/new-drop-qa/?sz=24
+# https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/c/new-drop-qa/new-drop-qa/?__siteDate=2020081212
+# https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/c/new-drop-qa/new-drop-qa/?__siteDate=2020081212&sz=24
+# https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/search?q=align&lang=en_HK [OK]
+# https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/search?q=align&lang=en_HK&__siteDate=2020081212
+# https://staging-eu01-lululemon.demandware.net/s/HK/en-hk/search?q=align&lang=en_HK&__siteDate=2020081212&sz=24
 
+# https://www.lululemon.co.uk/en-gb/search?q=align&lang=en_GB [OK]
+# https://www.lululemon.co.uk/en-gb/search?q=align&lang=en_GB&sz=24
+# https://www.lululemon.co.uk/en-gb/c/womens/collections/whats-new?sz=22 [OK]
 
 def url_edit(url, date=''):
+    #  For staging scrape, date will have value
     if len(date) > 0:
-        # Add time string 
-        now = datetime.datetime.now()
-        current_time = now.strftime("%H%M")
-        date_s = parsedate(date) + current_time
-    
-    if '?' in url:
-        idx = url.find('?')
-        url = url[0:idx]
-
-    if len(date) > 0:
-        url = url + '?__siteDate=' + date_s + '&sz=9999'
+        staging = True
+        date_s = parsedate(date) 
     else:
-        url = url + '?sz=9999'
+        staging = False
     
-    return url
+    #  Is it a search query? 
+    if 'search?q' in url:
+        search = True
+    else:
+        search = False
+    # Does it already have 'sz='
+    if 'sz=' in url:
+        size = True
+    else:
+        size = False
+    # Does it already have date
+    if 'siteDate' in url:
+        date = True
+    else: 
+        date = False
+    
+    # staging? search? size? date?
+
+    if staging and not search:
+        parsedUrl = url + '?__siteDate=' + date_s + '&sz=9999'
+    elif staging and search:
+        parsedUrl = url + '&__siteDate=' + date_s + '&sz=9999'
+    elif not staging and search:
+        parsedUrl = url + '&sz=9999'
+    else:
+        # not staging? and not search?
+        parsedUrl = url + '?sz=9999'
+
+
+    
+    return parsedUrl
 
 
 def cdp_scrape(url, info):
     email = info['email']
     password = info['password']
     date = info['date']
+    date_s = parsedate(date) 
     siteEnv = info['siteEnv']
 
     url = url_edit(url, date)
-
     print(url)
 
     s = requests.Session()
     response = s.get(url, auth=HTTPBasicAuth(email, password))
 
+    # find prefix to change PDP urls
     prefix = url_prefix(url, siteEnv)
-    
     print(prefix)
 
     if response.status_code != 200:
@@ -70,7 +103,11 @@ def cdp_scrape(url, info):
             a = pdp.find("a")
 
             href = a.get("href")
-            href = prefix + href
+            
+            if siteEnv == 'staging':
+                href = prefix + href + '?__siteDate=' + date_s 
+            else: 
+                href = prefix + href
 
             char = href.split("/")
             char0 = char[len(char)-1].split(".")
@@ -81,7 +118,8 @@ def cdp_scrape(url, info):
             product = {"master": master,
                        "link": href, "title": title}
             result.append(product)
-        return(result)
+        
+        return result
 
 def site_selector(site, siteEnv=''):
     # siteEnv = 'staging' / 'production'
@@ -136,30 +174,33 @@ def parsedate(string):
     if not '-' in string:
         return ''
     else:
-        return string.replace('-','')
+        now = datetime.datetime.now()
+        current_time = now.strftime("%H%M")
+        date = string.replace('-','')
+        return date + current_time
 
 def task_update(task_type, session_type, tasks):
-    print('-------- ATTENTION --------')
-    print(task_type)
-    print(tasks)
+    print('======= TASKS UPDATING =======')
+    print("TASK TYPE: ",task_type)
+    print("TASK: ", tasks)
     
-    local_tz = get_localzone()
-    print(local_tz)
-    tz = pytz.timezone(str(local_tz))
-
-
     for task in tasks:
         task_id = task['task_id']
         t = task_type.AsyncResult(task_id)
         status = t.state
+
+        print("ID: ",task_id)
+        print("STATE: ",status)
         
         if status == 'SUCCESS':
             finish_at = t.date_done
-
+            local_tz = get_localzone()
+            print("User's Timezone: ",local_tz)
+            tz = pytz.timezone(str(local_tz))
             utc_time = finish_at.replace(tzinfo = pytz.UTC)
-            print("UTC: ", utc_time)
+            print("Finished at (UTC): ", utc_time)
             local_time = utc_time.astimezone(tz)
-            print("Local: ", local_time)
+            print("Finished at (Local): ", local_time)
 
             finish_s = local_time.strftime("%D %H:%M:%S")
             task['finish_at'] = finish_s
@@ -171,3 +212,13 @@ def task_update(task_type, session_type, tasks):
     print(tasks)
 
     return tasks
+
+def takeSnapshot(task_id):
+    now = datetime.datetime.now()
+    now_s = now.strftime("%D %H:%M:%S")
+    task_object = {'task_id': task_id, 'start_at': now_s, 'finish_at': '', 'status': ''}
+    #  session[task_name] = [
+    # {task_id: id, start: start, finish: finish, status: status},
+    #   ...
+    # ]
+    return task_object

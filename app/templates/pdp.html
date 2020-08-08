@@ -64,6 +64,20 @@ PDP Search
                                     </div>
                                     <div class="modal-body">
                                         
+                                        {% if user %}
+                                            <div class="form-group">
+                                                <label for="email" class="col-form-label">Email:</label>
+                                                <input type="text" class="form-control" name="email" id="email" value = {{ user.email }}>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password" class="col-form-label">Password:</label>
+                                                <input type="password" class="form-control" name="password" id="password" value = {{ user.password }}></input>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="date" class="col-form-label">Date:</label>
+                                                <input type="date" class="form-control" name="date" id="date" value = {{ user.date }}></input>
+                                            </div>
+                                        {% else %}
                                             <div class="form-group">
                                                 <label for="email" class="col-form-label">Email:</label>
                                                 <input type="text" class="form-control" name="email" id="email">
@@ -76,7 +90,7 @@ PDP Search
                                                 <label for="date" class="col-form-label">Date:</label>
                                                 <input type="date" class="form-control" name="date" id="date"></input>
                                             </div>
-                                        
+                                        {% endif %}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -104,11 +118,11 @@ PDP Search
 
             <div class="card">
                 <div class="card-body">
-                    <h6 class="imagetask" id="{{task.ID}}">{{task.ID}}</h6>
-                    <small class="text-muted d-block">Status: <span
-                            class='{{task.status}}'>{{task.status}}</span></small>
-                    <!-- <small class="text-muted d-block">Created at: {{task.status}}</small> -->
-                    <small class="text-muted d-block"><a href=' {{task.url}}'>View
+                    <h6 class="imagetask" id="{{ task.task_id }}">{{ task.task_id }}</h6>
+                    <small class="text-muted d-block">Status: <span class='{{ task.status }}'>{{ task.status }}</span></small>
+                    <small class="text-muted d-block">Created at: {{ task.start_at }}</small>
+                    <small class="text-muted d-block">Finished at: {{ task.finish_at }}</small>
+                    <small class="text-muted d-block"><a href=' /pdp/{{ task.task_id }}'>View
                             Results</a></small>
                 </div>
             </div>
