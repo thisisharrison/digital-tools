@@ -1,29 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_session import Session
-# import secrets
-# import os
-# import redis
-# from datetime import datetime
 import datetime
 import time
-# from dateutil.tz import tzlocal
-# from tzlocal import get_localzone
-# import pytz
+import eventlet
 from flask_socketio import SocketIO, emit
-# import uuid
 from tasks import hello, imgstatus_task, pdpscrape_task
 from helper import *
 
 app = Flask(__name__)
 app.config.from_object('config.ProdConfig')
 Session(app)
-socketio = SocketIO(app)
-
-# key = secrets.token_urlsafe(16)
-# SESSION_TYPE = 'redis'
-# SESSION_REDIS = redis.from_url(os.environ.get('REDIS_URL','redis://localhost:6379/0'))
-# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
-
+socketio = SocketIO(app, logger=True, engineio_logger=True)
 
 
 @app.route("/")
