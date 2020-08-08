@@ -10,6 +10,7 @@ from helper import *
 app = Flask(__name__)
 app.config.from_object('config.ProdConfig')
 Session(app)
+eventlet.monkey_patch()
 socketio = SocketIO(app, logger=True, engineio_logger=True)
 
 
