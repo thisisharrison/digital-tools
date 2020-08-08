@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    
     // Identify which task we're on 
     const taskType = window.location.pathname.replace('/','')
     console.log('Task Type: '+ taskType)
