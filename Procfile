@@ -1,3 +1,3 @@
 web: gunicorn wsgi:app
-gunicorn --worker-class eventlet -w 1 module:app
+web: gunicorn -k eventlet app:main
 worker: celery worker -A tasks.app -l INFO
