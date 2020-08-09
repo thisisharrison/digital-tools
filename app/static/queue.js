@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Loads the Queue
     myChecking();
 
-    const refresh = document.querySelector('#refresh')
-    refresh.addEventListener("onclick", myChecking);
 
     
 });

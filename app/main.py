@@ -35,15 +35,10 @@ def updateSession(taskName, task_object):
             session[taskName].append(task_object)
         else:
             session[taskName].append(task_object)            
-    print(session[taskName])
     return
 
 def updateUser(info):
-    if session.get('user'):
-        if not session['user']['date'] == info['date']:
-            session['user']['date'] = info['date']
-        
-    else: 
+    if not session.get('user'):    
         email = info['email']
         password = info['password']
         date = info['date']
@@ -131,8 +126,10 @@ def prodpdp():
         # return redirect(url_for('pdp_result', task_id=task_id))
 
     else:
-        return render_template('pdp.html')
-        
+        if session.get('user'):
+            return render_template('pdp.html', user = session['user'])
+        else:
+            return render_template('pdp.html')
 
 
 @app.route("/pdp/<task_id>")
