@@ -4,15 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
-
-    // Change Nav bar color
-    // document.querySelectorAll('.nav-link').forEach(link => {
-    //     link.onclick = () => {
-    //         document.querySelector('.nav-link active').style.className = 'nav-link';
-    //         this.style.className = 'nav-link active'
-    //     };
+    
+    const taskType = window.location.pathname
+    
+    // // Change Nav bar color
+    // document.querySelectorAll('.nav-item').forEach(link => {
+    //     console.log(link.getAttribute('href'))
+        
     // });
-    
-    
-    
 });

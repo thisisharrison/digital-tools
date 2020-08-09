@@ -1,7 +1,8 @@
 
 <div class="row">
     <div class="col">
-        <h5>Queue</h5>
+        <h5>Queue </h5>
+        <button type="button" id="refresh" class="btn btn-outline-primary btn-sm" onclick="myChecking()">Refresh</button>
 
         {% for task in tasks %}
 
@@ -12,7 +13,7 @@
                         class='{{ task.status }}'>{{ task.status }}</span></small>
                 <small class="text-muted d-block">Created at: {{ task.start_at }}</small>
                 <small class="text-muted d-block">Finished at: {{ task.finish_at }}</small>
-                <small class="text-muted d-block"><a href=' /pdp/{{ task.task_id }}'>View
+                <small class="text-muted d-block"><a href=' /{{ action }}/{{ task.task_id }}'>View
                         Results</a></small>
             </div>
         </div>

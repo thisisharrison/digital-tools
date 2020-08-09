@@ -1,7 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block head %}
+{% if not results %}
 <script src="{{ url_for('static', filename='queue.js') }}"></script>
+{% endif %}
 {% endblock %}
 
 {% block title %}
@@ -10,6 +12,7 @@ PDP Search
 
 
 {% block content %}
+{% if not results %}
 <script src="{{ url_for('static', filename='siteenv.js') }}"></script>
 
 <div class="container">
@@ -116,7 +119,7 @@ PDP Search
 
 
 <div class="container" id="queue">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col">
             <h5>Queue</h5>
 
@@ -136,8 +139,9 @@ PDP Search
             {% endfor %}
 
         </div>
-    </div>
+    </div> -->
 </div>
+{% endif %}
 
 {% if results %}
 <div class="container">

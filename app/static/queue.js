@@ -1,43 +1,29 @@
+function myChecking() {
 
+    // Find section text from server
+    console.log("Checking starts now...")
 
-document.addEventListener('DOMContentLoaded', () => {
-
-    // Identify which task we're on 
     const taskType = window.location.pathname.replace('/', '')
     const queue = document.getElementById('queue')
-
     console.log('Task Type: ' + taskType)
 
-    console.log("Checking starts now...")
-    var checkTasks = setInterval(myChecking, 3000)
+    fetch(`/queue/${taskType}`)
+        .then(response => response.text())
+        .then(text => {
+            // Log text and display on page
+            console.log("AJAX udpated");
+            queue.innerHTML = text;
+        })
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     
-    // let tasks = document.querySelectorAll('.PENDINGIds')
+    // Loads the Queue
+    myChecking();
 
-    // // Only check if there are pending IDs
-    // if (tasks.length == 0) {
-    //     var checkTasks = null
-    // }
-    // if (tasks.length != 0) {
-    //     var checkTasks = setInterval(myChecking, 5000)
-    // }
+    const refresh = document.querySelector('#refresh')
+    refresh.addEventListener("onclick", myChecking);
 
-    function myChecking() {
-
-        // Find section text from server
-        fetch(`/queue/${taskType}`)
-            .then(response => response.text())
-            .then(text => {
-                // Log text and display on page
-                console.log("AJAX udpated");
-                queue.innerHTML = text;
-            });
-        
-        // console.log("AJAX udpated")
-        
-        // let tasks = document.querySelectorAll('.PENDINGIds')
-        // if (tasks.length == 0) {
-        //     clearInterval(checkTasks);
-        //     console.log("Interval Cleared!")
-        // }
-    }
+    
 });
+

@@ -3,7 +3,7 @@ from flask_session import Session
 import datetime
 import time
 # import eventlet
-from flask_socketio import SocketIO, emit
+# from flask_socketio import SocketIO, emit
 from tasks import hello, imgstatus_task, pdpscrape_task
 from helper import *
 
@@ -11,8 +11,7 @@ app = Flask(__name__)
 app.config.from_object('config.ProdConfig')
 Session(app)
 # eventlet.monkey_patch()
-socketio = SocketIO(app, logger=True, engineio_logger=True, manage_session=False)
-# , cors_allowed_origins="*"
+# socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True, manage_session=False)
 
 @app.route("/")
 def index():
@@ -70,12 +69,7 @@ def image():
 
     else:
         return render_template('image.html')
-        # if session.get('imageTasks'):
-        #     image_tasks = session['imageTasks']
-        #     tasks = task_update(imgstatus_task, 'imageTasks', image_tasks)
-        #     return render_template('image.html', tasks = tasks[::-1])
-        # else: 
-        #     return render_template('image.html')
+        
         
 @app.route("/queue/<task>")
 def queue(task):
@@ -96,7 +90,7 @@ def queue(task):
     
     if tasks != None:
         tasks = task_update(task_type, session_name, tasks)
-        return render_template('queue.html', tasks = tasks[::-1])
+        return render_template('queue.html', tasks = tasks[::-1], action = task)
     else:
         return render_template('queue.html')
     
@@ -138,12 +132,6 @@ def prodpdp():
 
     else:
         return render_template('pdp.html')
-        # if session.get('pdpTasks'):
-        #     pdp_tasks = session['pdpTasks']
-        #     tasks = task_update(pdpscrape_task, 'pdpTasks', pdp_tasks)
-        #     return render_template('pdp.html', tasks = tasks[::-1], user = session['user'])
-        # else: 
-        #     return render_template('pdp.html')
         
 
 
@@ -153,13 +141,6 @@ def pdp_result(task_id):
     task = pdpscrape_task.AsyncResult(task_id)
     results = task.get()
     
-    # Gets back finished time in UTC format 
-    # print(task.date_done)
-
-    # info and results are identical
-    print(task.info)
-    print(task.result)
-
     # render result page
     return render_template('pdp.html', results=results)
 
@@ -186,24 +167,24 @@ def prodcdp():
             return render_template('cdp.html')
     
 
-@socketio.on('check status')
-def check_status(data):
-    pending_tasks = data['ids']
-    path = data['task']
-    print('======= SOCKET CHECKING =======')
-    print("Checking IDS: ",pending_tasks)
-    print("Checking TASK TYPE: ",path)
+# @socketio.on('check status')
+# def check_status(data):
+#     pending_tasks = data['ids']
+#     path = data['task']
+#     print('======= SOCKET CHECKING =======')
+#     print("Checking IDS: ",pending_tasks)
+#     print("Checking TASK TYPE: ",path)
     
-    complete = []
-    if path == 'pdp':
-        task_type = pdpscrape_task
-    elif path == 'image':
-        task_type = imgstatus_task
+#     complete = []
+#     if path == 'pdp':
+#         task_type = pdpscrape_task
+#     elif path == 'image':
+#         task_type = imgstatus_task
 
-    for i in pending_tasks:
-        task = task_type.AsyncResult(i)
-        status = task.state
-        if status == "SUCCESS":
-            complete.append(i)
-            socketio.emit('update complete', {'ID': complete})
+#     for i in pending_tasks:
+#         task = task_type.AsyncResult(i)
+#         status = task.state
+#         if status == "SUCCESS":
+#             complete.append(i)
+#             socketio.emit('update complete', {'ID': complete})
     
