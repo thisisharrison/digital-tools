@@ -163,6 +163,13 @@ def prodcdp():
         else:
             return render_template('cdp.html')
     
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('500.html'), 500
+
+@app.errorhandler(503)
+def page_not_found(e):
+    return render_template('503.html'), 503
 
 # @socketio.on('check status')
 # def check_status(data):
