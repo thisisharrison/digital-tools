@@ -1,17 +1,19 @@
+import os 
+import psycopg2
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_session import Session
 import datetime
 import time
-# import eventlet
-# from flask_socketio import SocketIO, emit
 from tasks import hello, imgstatus_task, pdpscrape_task
 from helper import *
 
 app = Flask(__name__)
 app.config.from_object('config.ProdConfig')
 Session(app)
-# eventlet.monkey_patch()
-# socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True, manage_session=False)
+
+DATABASE_URL = os.environ['DATABASE_URL']
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
 
 @app.route("/")
 def index():
