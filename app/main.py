@@ -1,5 +1,8 @@
 import os 
-import psycopg2
+# import psycopg2
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_session import Session
 import datetime
@@ -12,7 +15,33 @@ app.config.from_object('config.ProdConfig')
 Session(app)
 
 DATABASE_URL = os.environ['DATABASE_URL']
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+class Product(db.Model):
+    __tablename__ = 'products'
+    id = db.Column(db.Integer, primary_key=True)
+    sku = db.Column(db.BigInteger, unique=True, nullable=False, index=True)
+    style_desc = db.Column(db.String(120), nullable=False)
+    style_option = db.Column(db.String(120), nullable=False, index=True)
+    colour_name = db.Column(db.String(120), nullable=False)
+    size_code = db.Column(db.String(120), nullable=False)
+    department_name = db.Column(db.String(120))
+    class_name = db.Column(db.String(120))
+    subclass_name = db.Column(db.String(120))
+
+    def __init__(self, sku, style_desc, style_option, colour_name, size_code, department_name, class_name, subclass_name):
+        self.sku = sku
+        self.style_desc = style_desc
+        self.style_option = style_option
+        self.colour_name = colour_name
+        self.size_code = size_code
+        self.department_name = department_name
+        self.class_name = class_name
+        self.subclass_name = subclass_name
 
 
 @app.route("/")
