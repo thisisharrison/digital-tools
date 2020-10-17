@@ -11,7 +11,7 @@ from tasks import hello, imgstatus_task, pdpscrape_task
 from helper import *
 
 app = Flask(__name__)
-app.config.from_object('config.DevConfig')
+app.config.from_object('config.ProdConfig')
 Session(app)
 
 DATABASE_URL = os.environ['DATABASE_URL']
