@@ -25,24 +25,41 @@ class Product(db.Model):
     __tablename__ = 'products'
     id = db.Column(db.Integer, primary_key=True)
     sku = db.Column(db.BigInteger, unique=True, nullable=False, index=True)
+    upc = db.Column(db.BigInteger)
+    sku_desc = db.Column(db.String(120))
     style_desc = db.Column(db.String(120), nullable=False)
     style_option = db.Column(db.String(120), nullable=False, index=True)
     colour_name = db.Column(db.String(120), nullable=False)
     size_code = db.Column(db.String(120), nullable=False)
+    division = db.Column(db.Integer)
+    division_name = db.Column(db.String(120))
+    department = db.Column(db.String(120))
     department_name = db.Column(db.String(120))
+    class1 = db.Column(db.String(120))
     class_name = db.Column(db.String(120))
+    subclass1 = db.Column(db.String(120))
     subclass_name = db.Column(db.String(120))
 
-    def __init__(self, sku, style_desc, style_option, colour_name, size_code, department_name, class_name, subclass_name):
+    def __init__(self, sku, upc, sku_desc, style_desc, style_option, colour_name, size_code, division, division_name, department, department_name, class1, class_name, subclass1, subclass_name):
         self.sku = sku
+        self.upc = upc
+        self.sku_desc = sku_desc
         self.style_desc = style_desc
         self.style_option = style_option
         self.colour_name = colour_name
         self.size_code = size_code
+        self.division = division
+        self.division_name = division_name
+        self.department = department
         self.department_name = department_name
+        self.class1 = class1
         self.class_name = class_name
+        self.subclass1 = subclass1
         self.subclass_name = subclass_name
 
+
+
+# \copy products(sku, upc, sku_desc, style_desc, style_option, colour_name, size_code, division, division_name, department, department_name, class1, class_name, subclass1, subclass_name) FROM '/Users/harrisonlau/Desktop/projects/tools-app/models/appendRMS.csv' DELIMITER ',' CSV HEADER;
 
 @app.route("/")
 def index():
