@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Product Search
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Search Product Data</h5>
+            <div class="card">
+                <div class="card-body">
+                    <form action="/product" method="post">
+                        <div class="form-group">
+                            <label for="productsearch">Enter Product</label>
+                            <textarea name="products" id="productsearch" row="6" class="form-control"
+                                placeholder="eg. LW5LJFS-031382&#10;LW5CJ5S&#10;109925821"></textarea>
+                            <small class="text-muted d-block">Tip: Currently supports searching by Style Colors, Style Numbers or SKUs.</small>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if data %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Results</h5>
+        
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">SKU</th>
+                        <th scope="col">Style Description</th>
+                        <th scope="col">Style Option</th>
+                        <th scope="col">Color Name</th>
+                        <th scope="col">Size Code</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Class</th>
+                        <th scope="col">Subclass</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for product in data %}
+                        <tr>
+                            <td>{{product['sku']}}</td>
+                            <td>{{product['style_desc']}}</td>
+                            <td>{{product['style_option']}}</td>
+                            <td>{{product['colour_name']}}</td>
+                            <td>{{product['size_code']}}</td>
+                            <td>{{product['department']}}</td>
+                            <td>{{product['class']}}</td>
+                            <td>{{product['subclass']}}</td>
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% endblock %}

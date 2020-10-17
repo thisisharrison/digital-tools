@@ -103,6 +103,12 @@ def cdp_scrape(url, info):
             a = pdp.find("a")
 
             href = a.get("href")
+
+            try:
+                asterisk = pdp.find("span").text.strip()
+            except:
+                asterisk = ''
+                pass
             
             if siteEnv == 'staging':
                 href = prefix + href + '?__siteDate=' + date_s 
@@ -114,6 +120,9 @@ def cdp_scrape(url, info):
             master = char0[0]
 
             title = a.text.strip()
+
+            if asterisk:
+                title = title + " *" + asterisk
 
             product = {"master": master,
                        "link": href, "title": title}
@@ -222,3 +231,19 @@ def takeSnapshot(task_id):
     #   ...
     # ]
     return task_object
+
+def query_product_segment(queryset):
+    query_hash = {'sku': [], 'style_option': [], 'style_number': [], 'others': []}
+
+    for item in queryset:
+        if item.isnumeric():
+            query_hash['sku'].append(item)
+        elif '-' in item:
+            query_hash['style_option'].append(item)
+        else:
+            query_hash['style_number'].append(item)
+        # else:
+        #     query_hash['others'].append(item)
+    
+    return query_hash
+

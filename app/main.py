@@ -3,7 +3,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_session import Session
 import datetime
 import time
@@ -11,7 +11,7 @@ from tasks import hello, imgstatus_task, pdpscrape_task
 from helper import *
 
 app = Flask(__name__)
-app.config.from_object('config.ProdConfig')
+app.config.from_object('config.DevConfig')
 Session(app)
 
 DATABASE_URL = os.environ['DATABASE_URL']
@@ -55,9 +55,20 @@ class Product(db.Model):
         self.class1 = class1
         self.class_name = class_name
         self.subclass1 = subclass1
-        self.subclass_name = subclass_name
+        self.subclass_name = subclass_name        
 
-
+    @property
+    def serialize(self):
+        return {
+            'sku': self.sku,
+            'style_desc': self.style_desc,
+            'style_option': self.style_option,
+            'colour_name': self.colour_name,
+            'size_code': self.size_code,
+            'department': self.department_name,
+            'class': self.class_name,
+            'subclass': self.subclass_name
+        }
 
 # \copy products(sku, upc, sku_desc, style_desc, style_option, colour_name, size_code, division, division_name, department, department_name, class1, class_name, subclass1, subclass_name) FROM '/Users/harrisonlau/Desktop/projects/tools-app/models/appendRMS.csv' DELIMITER ',' CSV HEADER;
 
@@ -93,6 +104,47 @@ def updateUser(info):
         session['user'] = {'email': email, 'password': password, 'date': date}
     return
         
+@app.route("/product", methods=["GET", "POST"])
+def product():
+    if request.method == 'POST':
+        query = request.form.get('products')
+        queryset = query_edit(query)
+
+        # segmenting skus, style options and style number
+        query_hash = query_product_segment(queryset)
+        print(query_hash)        
+
+        total_results = []
+        if query_hash['sku']:
+            results = Product.query.filter(Product.sku.in_((query_hash['sku']))).all()
+            total_results += results
+            
+
+        if query_hash['style_option']:
+            results = Product.query.filter(Product.style_option.in_((query_hash['style_option']))).all()
+            total_results += results
+
+            
+        if query_hash['style_number']:
+            results = []
+            for style_number in query_hash['style_number']:
+                search = "%{}%".format(style_number)
+                output = Product.query.filter(Product.style_option.like(search)).all()
+                results += output
+            total_results += results
+
+
+        # if query_hash['others']: => (search by product name?)
+
+        # result = jsonify(search_result = [r.serialize for r in total_results])
+        # return result
+
+        data = [r.serialize for r in total_results]
+        
+
+        return render_template('product.html', data = data)
+    else:
+        return render_template('product.html')
 
 
 @app.route("/image", methods=["GET", "POST"])

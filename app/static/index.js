@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
         $('[data-toggle="tooltip"]').tooltip()
     })
     
+    $('#navbarText .navbar-nav a').on('click', function () {
+        // $('#navbarText .navbar-nav').find('li.active').removeClass('active');
+        $(this).parent('li').addClass('active');
+    });
+
     const taskType = window.location.pathname
-    
-    // // Change Nav bar color
-    // document.querySelectorAll('.nav-item').forEach(link => {
-    //     console.log(link.getAttribute('href'))
-        
-    // });
+
 });
