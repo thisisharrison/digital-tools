@@ -2,6 +2,7 @@ import os
 # import psycopg2
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from sqlalchemy import func
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_session import Session
@@ -134,7 +135,14 @@ def product():
             total_results += results
 
 
-        # if query_hash['others']: => (search by product name?)
+        # if query_hash['others']:
+            # results = []
+            # for word in query_hash['others']:
+                # # align pant = '%align%pant%'
+                # alike = '%' + '%'.join(word.split()) + '%'
+                # Product.query.filter(func.lower(Product.style_desc).like(alike)).all()
+                # results += output
+            # total_result += results
 
         # result = jsonify(search_result = [r.serialize for r in total_results])
         # return result
