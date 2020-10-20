@@ -20,3 +20,7 @@
 .stat403::after{
     content: " ❌";
 }
+.nav-item.active{
+    border-bottom: 2px solid #fff;
+}
+

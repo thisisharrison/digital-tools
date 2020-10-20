@@ -36,20 +36,20 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item" id="index">
                 <a class="nav-link" href="{{url_for('index')}}">Home</a>
                 <!-- <a class="nav-link" href="{{url_for('index')}}">Home <span class="sr-only">(current)</span></a> -->
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="product">
                 <a class="nav-link" href="{{url_for('product')}}">Products</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="image">
                 <a class="nav-link" href="{{url_for('image')}}">Images</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="prodpdp">
                 <a class="nav-link" href="{{url_for('prodpdp')}}">PDPs</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="prodcdp">
                 <a class="nav-link" href="{{url_for('prodcdp')}}">CDPs</a>
             </li>
         </ul>
@@ -69,6 +69,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $("#{{request.endpoint}}").addClass("active");
+        })
+    </script>
 </body>
 
 </html>
