@@ -139,7 +139,7 @@ def product():
             # results = []
             # for word in query_hash['others']:
                 # # align pant = '%align%pant%'
-                # alike = '%' + '%'.join(word.split()) + '%'
+                # alike = '%' + '%'.join(word.lower().split()) + '%'
                 # Product.query.filter(func.lower(Product.style_desc).like(alike)).all()
                 # results += output
             # total_result += results
