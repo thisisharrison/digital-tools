@@ -43,37 +43,78 @@ def url_edit(url, date=''):
     else:
         staging = False
     
-    #  Is it a search query? 
-    if 'search?q' in url:
-        search = True
-    else:
-        search = False
-    # Does it already have 'sz='
-    if 'sz=' in url:
-        size = True
-    else:
-        size = False
-    # Does it already have date
-    if 'siteDate' in url:
-        date = True
-    else: 
-        date = False
+    if ('?' not in url) and ('&' not in url):
+        if staging == False:
+            parsedUrl = url + '?sz=9999'
+        else:
+            parsedUrl = url + '?__siteDate=' + date_s + '&sz=9999'
     
-    # staging? search? size? date?
-
-    if staging and not search:
-        parsedUrl = url + '?__siteDate=' + date_s + '&sz=9999'
-    elif staging and search:
-        parsedUrl = url + '&__siteDate=' + date_s + '&sz=9999'
-    elif not staging and search:
-        parsedUrl = url + '&sz=9999'
-    else:
-        # not staging? and not search?
-        parsedUrl = url + '?sz=9999'
-
-
+        return parsedUrl
     
-    return parsedUrl
+    if ('?sz' in url) and ('&' not in url):
+        if staging == False:
+            parsedUrl = url.replace('?sz=', '?sz=9999')
+        else:
+            split = url.split('?sz')
+            parsedUrl = split[0] + '?__siteDate=' + date_s 
+            extra_params = ('&sz' + ''.join(split[1:])).replace('&sz=', '&sz=9999')
+            parsedUrl += extra_params
+        
+        return parsedUrl
+
+    if ('?q=' in url) and ('&sz' not in url):
+        if staging == False:
+            parsedUrl = url + '&sz=9999'
+        else:
+            parsedUrl = url + '&__siteDate=' + date_s + '&sz=9999'
+        
+        return parsedUrl
+    
+    if ('?q=' in url) and ('&sz' in url):
+        url = url.replace('&sz=', '&sz=9999')
+        if staging == False:
+            parsedUrl = url
+        else:
+            # Check
+            parsedUrl = url + '&__siteDate=' + date_s
+        
+        return parsedUrl
+
+
+    if ('?q=' in url) and ('&' in url):
+        split = url.split('?')
+        extra_params = '&'.join(split[1:])
+        if staging == False:
+            parsedUrl = url + extra_params + '&sz=9999'
+        else:
+            # Check
+            parsedUrl = url + extra_params + '&__siteDate=' + date_s + '&sz=9999'
+        
+        return parsedUrl
+
+
+    if ('?' in url) and ('&sz' not in url):
+        if staging == False:
+            parsedUrl = url + '&sz=9999'
+        else:
+            # split by '?'
+            split = url.split('?')
+            extra_params = '&'.join(split[1:])
+            parsedUrl = split[0] + '?__siteDate=' + date_s + '&' + extra_params + '&sz=9999'
+        
+        return parsedUrl
+
+    if ('?' in url) and ('&sz' in url): 
+        url = url.replace('&sz=', '&sz=9999')
+        if staging == False:
+            parsedUrl = url
+        else:
+            split = url.split('?')
+            extra_params = '&'.join(split[1:])
+            parsedUrl = split[0] + '?__siteDate=' + date_s + '&' + extra_params
+        
+        return parsedUrl
+
 
 
 def cdp_scrape(url, info):

@@ -46,39 +46,117 @@ class PDP():
             return self
 
         soup = BeautifulSoup(response.text,'html.parser')
+        
         # Title
         self.title = soup.find(class_='product-name d-none d-lg-block').text
+        
         # WWMT
-        wwmt = soup.find(class_='product-message').text.strip()
+        if info['site'] in ['JP', 'FR', 'DE', 'EU']:
+            wwmt = soup.find(class_='product-message').text.strip()
+        else:
+            try:
+                wwmt = soup.find('p', {'class': 'why-we-made-this__text'}).text.strip()
+            except:
+                wwmt = ''
         self.wwmt = wwmt.replace('\n', '')
+        
+        
+        
         # 5Fs
-        f = soup.find(
-            class_='additional-description-and-detail').text.strip()
-        self.fivef = " ".join(f.split())
+        if info['site'] in ['JP', 'FR', 'DE', 'EU']:
+            f = soup.find(
+                class_='additional-description-and-detail').text.strip()
+            self.fivef = " ".join(f.split())
+        else:
+            try:
+                feature = soup.find_all(
+                    id="collapseOne"
+                )[1].text.strip()
+            except:
+                feature = ''
+            try:
+                fabric_title = soup.find_all(
+                    class_="accordion-title"
+                )[1].text.strip()
+                fabric_desc = soup.find(
+                    id="collapseTwo"
+                ).text.strip()
+            except:
+                fabric_title = ''
+                fabric_desc = ''
+            try:
+                care = soup.find(
+                    id="collapseThree"
+                ).text.strip()
+            except:
+                care = ''
+            # Actvitiy Info
+            try:
+                activity = soup.find(class_='activity-info').text.strip()
+            except:
+                activity = ''
+            try:
+                activity2 = soup.find(class_='why_designed').text.strip()
+            except:
+                activity2 = ''
+            
+            self.fivef = "Designed For (Top): {}\nDesigned For (Bottom): {}\nFeature: {}\n{}: {}\nCare: {}".format(activity, activity2, feature, fabric_title, fabric_desc, care)
+
+
         # Breadcrumb
-        crumb = soup.find_all(class_='breadcrumb-item')
+        dkview = soup.find(class_='breadCrumbsDesktopView')
+        if info['site'] in ['JP', 'FR', 'DE', 'EU']:
+            crumb = dkview.find_all(class_='breadcrumb-item')
+        else:
+            crumb = dkview.find_all(class_='breadcrumb-item-new')
         b = []
         for c in crumb:
             b.append(c.text.strip())
+        b = list(dict.fromkeys(b))
         self.bread = " > ".join(b)
+
+
         # Color
         if soup.find(class_='selected-swatch-name') == None:
             self.color = ''
         else:
             self.color = soup.find(class_='selected-swatch-name').text
+        
+
         # Price
-        prices = soup.find_all(class_='value')
-        price = []
-        for p in prices:
-            price.append(p.text.strip())
-        price = list(set(price))
-        self.price = " - ".join(price)
+        if info['site'] in ['JP', 'FR', 'DE', 'EU']:
+            prices = soup.find_all(class_='value')
+            price = []
+            for p in prices:
+                price.append(p.text.strip())
+            price = list(set(price))
+            self.price = " - ".join(price)
+        else:
+            try:
+                price = soup.find_all(class_="color")
+                price_string = []
+                for p in price:
+                    if '.00' in p.text.strip():
+                        price_string.append(p.text.strip())
+                    else:
+                        continue
+                
+                self.price = " - ".join(price_string)
+            except:
+                self.price = ''
+
+
         # Sizes
-        sizes = soup.find_all('option', {'id': 'sizeSelected'})
+        if info['site'] in ['JP', 'FR', 'DE', 'EU']:
+            sizes = soup.find_all('option', {'id': 'sizeSelected'})    
+        else:
+            sizes = soup.find_all(class_="size-btns")
         size = []
         for s in sizes:
             size.append(s.text.strip())
         self.size = ", ".join(size)
+
+
         # Image count
         self.img_count = len(soup.find_all(class_='carousel-item-message'))
         
